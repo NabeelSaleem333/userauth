@@ -22,7 +22,6 @@ UserRouter.route("/signup").post(async (req, res) => {
     } else {
       var transport = nodemailer.createTransport({
         service: "gmail",
-        port: 587,
         auth: {
           user: "nabeel.saleem333",
           pass: "christ@777",
@@ -30,7 +29,7 @@ UserRouter.route("/signup").post(async (req, res) => {
       });
       var mailOptions = {
         from: "nabeel.saleem333@gmail.com",
-        to: "ns964911@gmail.com",
+        to: req.body.email,
         subject: "Node.js Test Email",
         text: "Hello to the new email sending programming work",
         html:
@@ -39,13 +38,13 @@ UserRouter.route("/signup").post(async (req, res) => {
       transport.sendMail(mailOptions, (error, info) => {
         if (error) {
           console.log("Error in sending email");
-          res.statusCode = 500;
-          res.setHeader("Content-Type", "text/plain");
+          res.statusCode = 404;
+          res.setHeader("Content-Type", "application/json");
           return res.json(error);
         } else {
           console.log("Email send sucessfully!");
           res.statusCode = 200;
-          res.setHeader("Content-Type", "text/plain");
+          res.setHeader("Content-Type", "application/json");
 
           const user = User.create(req.body);
           if (user) {
