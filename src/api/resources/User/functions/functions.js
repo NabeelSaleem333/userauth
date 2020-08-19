@@ -2,13 +2,13 @@ const nodemailer = require("nodemailer");
 const User = require("../user-models/user.model");
 const OptCode = require("../user-models/code.model");
 
-return (module.exports.sendEmail = async (email) => {
+module.exports.sendEmail = async (email) => {
   console.log("Hello am in function file yahooooooooooooooo.");
   /* 
     Generate 6 digit code
     */
   const code = await generateCode(email);
-  console.log(code);
+  console.log("code: ", code);
   // const code = 1111111;
 
   /*
@@ -50,49 +50,59 @@ return (module.exports.sendEmail = async (email) => {
     }
     //   return res.json(info);
   });
-});
+};
 
 async function generateCode(email) {
   //
-  const optcode = (await OptCode.find()).length;
-  console.log(optcode);
-  if (optcode > 0) {
-    const lastcode = await OptCode.findOne().sort({ _id: -1 }).limit(1);
-    console.log("last code: ", lastcode);
-    // if (lastcode) {
-    if (lastcode.optcode / 2 === 0) {
-      const code = lastcode.optcode + parseInt(lastcode.optcode / 2, 5);
-      console.log(code);
+  try {
+    const optcode = (await OptCode.find()).length;
+    console.log("otp code length:" ,optcode);
+    if (optcode > 0) {
+      const lastcode = await OptCode.findOne().sort({ _id: -1 }).limit(1);
+      console.log("last code: ", lastcode);
+      // if (lastcode) {
+      if ((lastcode.optcode / 2) === 0) {
+        console.log('if old code: ', lastcode.optcode);
+        const c = parseInt(lastcode.optcode % 2);
+        console.log('if parseInt: ',c);
+        const code = lastcode.optcode + c ;
+        console.log(' if new code: ',code);
+        const body = {
+          email: email,
+          optcode: code,
+        };
+        const savecode = await OptCode.create(body);
+        console.log("Code Saved: ", savecode);
+        return code;
+      } else {
+        console.log('else old code: ', lastcode.optcode);
+        const c = parseInt(lastcode.optcode % 2);
+        console.log('else parseInt: ',c);
+        const code = lastcode.optcode + c ;
+        console.log('else new code: ',code);
+        const body = {
+          email: email,
+          optcode: code,
+        };
+        const savecode = await OptCode.create(body);
+        console.log("Code Saved: ", savecode);
+        return code;
+      }
+    } else if (optcode === 0) {
+      const gencode = 111111;
       const body = {
         email: email,
-        optcode: code,
+        optcode: gencode,
       };
       const savecode = await OptCode.create(body);
       console.log("Code Saved: ", savecode);
-      return code;
-    } else {
-      const code = lastcode.optcode + parseInt(lastcode.optcode / 2, 5);
-      console.log(code);
-      const body = {
-        email: email,
-        optcode: code,
-      };
-      const savecode = await OptCode.create(body);
-      console.log("Code Saved: ", savecode);
-      return code;
+      console.log("Gen Code: ",gencode);
+      
+      if (savecode) {
+        return gencode;
+      } else {
+        return "error in saving code";
+      }
     }
-  } else if (optcode === 0) {
-    const gencode = 111111;
-    const body = {
-      email: email,
-      optcode: gencode,
-    };
-    const savecode = await OptCode.create(body);
-    console.log("Code Saved: ", savecode);
-    if (savecode) {
-      return lastcode.optcode;
-    } else {
-      return "error in saving code";
-    }
-  }
+  } catch (error) {}
 }

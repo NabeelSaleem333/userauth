@@ -21,15 +21,25 @@ UserRouter.route("/signup").post(async (req, res) => {
     if (findUser) {
       res.statusCode = 200;
       res.setHeader("Content-Type", "application/json");
-      res.json({ status: false, msg: "User already Exist" });
+      res.json({ status: false, msg: "Email already exist!" });
     } else {
-      func.sendEmail(req.body.email);
-      res.statusCode = 200;
-      res.setHeader("Content-Type", "application/json");
-      res.json({
-        status: true,
-        msg: "Please check your email to enter 6 digit code...",
-      });
+      const user = await User.create(req.body);
+      if (user) {
+        func.sendEmail(req.body.email);
+        res.statusCode = 200;
+        res.setHeader("Content-Type", "application/json");
+        res.json({
+          status: true,
+          msg: "Please check your email to enter 6 digit code!",
+        });
+      } else {
+        res.statusCode = 500;
+        res.setHeader("Content-Type", "application/json");
+        res.json({
+          status: true,
+          msg: "Internal Server error to save the user information!",
+        });
+      }
     }
   } catch (error) {
     return res.status(500).json(error);
