@@ -87,4 +87,26 @@ UserRouter.route("/login").post(async (req, res) => {
   }
 });
 
+/* 
+A admin can get the information of all the user of the system
+*/
+UserRouter.route("").get(async (req, res) => {
+  try {
+    const users = await User.find();
+    if (users.length > 0) {
+      res.status = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json(users);
+    } else {
+      res.status = 404;
+      res.setHeader("Content-Type", "application/json");
+      res.json({ status: false, msg: "No user exist" });
+    }
+  } catch (error) {
+    res.status = 500;
+    res.setHeader("Content-Type", "application/json");
+    res.json(error);
+  }
+});
+
 module.exports = UserRouter;
