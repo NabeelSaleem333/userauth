@@ -3,6 +3,7 @@ const nodemailer = require("nodemailer");
 const UserRouter = express.Router();
 const User = require("./user-models/user.model");
 const { find } = require("./user-models/user.model");
+const func = require("../User/functions/functions");
 /* Task List in User-Auth 
 1-SignUp (username,email,password || Mobile Number)
 2-Login (email,password || Mobile Number)
@@ -18,42 +19,16 @@ UserRouter.route("/signup").post(async (req, res) => {
     const findUser = await User.findOne({ email: req.body.email });
     console.log(findUser);
     if (findUser) {
-      return res.status(200).json({ status: false, msg: "User already Exist" });
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json({ status: false, msg: "User already Exist" });
     } else {
-      var transport = nodemailer.createTransport({
-        service: "gmail",
-        auth: {
-          user: "nabeel.saleem333",
-          pass: "christ@777",
-        },
-      });
-      var mailOptions = {
-        from: "nabeel.saleem333@gmail.com",
-        to: req.body.email,
-        subject: "Node.js Test Email",
-        text: "Hello to the new email sending programming work",
-        html:
-          "<h1>Hello World, Hello to the new email sending programming work</h1>",
-      };
-      transport.sendMail(mailOptions, (error, info) => {
-        if (error) {
-          console.log("Error in sending email");
-          res.statusCode = 404;
-          res.setHeader("Content-Type", "application/json");
-          return res.json(error);
-        } else {
-          console.log("Email send sucessfully!");
-          res.statusCode = 200;
-          res.setHeader("Content-Type", "application/json");
-
-          const user = User.create(req.body);
-          if (user) {
-            return res.status(200).json(user);
-          } else {
-            return res.status(400).json("User not Saved:");
-          }
-          //   return res.json(info);
-        }
+      func.sendEmail(req.body.email);
+      res.statusCode = 200;
+      res.setHeader("Content-Type", "application/json");
+      res.json({
+        status: true,
+        msg: "Please check your email to enter 6 digit code...",
       });
     }
   } catch (error) {
