@@ -177,12 +177,12 @@ UserRouter.route("/login").post(async (req, res) => {
       const findUser = await User.findOne({
         email: req.body.email,
         password: req.body.password,
-      });
+      },{password: 0});
       console.log(findUser);
       if (findUser) {
         res.statusCode = 200;
         res.setHeader("Content-Type", "application/json");
-        res.json(findUser);
+        res.json({status: true, findUser});
       } else {
         res.statusCode = 404;
         res.setHeader("Content-Type", "application/json");
