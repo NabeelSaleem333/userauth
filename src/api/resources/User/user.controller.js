@@ -186,7 +186,7 @@ UserRouter.route("/login").post(async (req, res) => {
       } else {
         res.statusCode = 404;
         res.setHeader("Content-Type", "application/json");
-        res.json({ status: "User not found" });
+        res.json({ status: false, msg:'Invalid Email or Password' });
       }
     }
   } catch (error) {
