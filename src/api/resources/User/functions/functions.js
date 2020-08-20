@@ -1,8 +1,8 @@
 const nodemailer = require("nodemailer");
 const User = require("../user-models/user.model");
-const OptCode = require("../user-models/code.model");
+const OtpCode = require("../user-models/code.model");
 
-module.exports.sendEmail = async (email) => {
+module.exports.sendEmail = async (email, callback) => {
   console.log("Hello am in function file yahooooooooooooooo.");
   /* 
     Generate 6 digit code
@@ -37,16 +37,16 @@ module.exports.sendEmail = async (email) => {
   transport.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log("Error in sending email");
-      res.json(error);
-      //   return ("Error in Email send ");
+    //   res.json(error);
+        return callback("Error in Email send ");
     } else {
       console.log("Email send sucessfully!");
 
-      res.json({
-        status:
-          "Please check your email address to enter 6 digit code to proceed further",
-      });
-      //   return "Please check your email address to enter 6 digit code to proceed further";
+    //   res.json({
+    //     status:
+    //       "Please check your email address to enter 6 digit code to proceed further",
+    //   });
+        return callback("Please check your email address to enter 6 digit code to proceed further");
     }
     //   return res.json(info);
   });
@@ -55,46 +55,64 @@ module.exports.sendEmail = async (email) => {
 async function generateCode(email) {
   //
   try {
-    const optcode = (await OptCode.find()).length;
-    console.log("otp code length:" ,optcode);
-    if (optcode > 0) {
-      const lastcode = await OptCode.findOne().sort({ _id: -1 }).limit(1);
-      console.log("last code: ", lastcode);
-      // if (lastcode) {
-      if ((lastcode.optcode / 2) === 0) {
-        console.log('if old code: ', lastcode.optcode);
-        const c = parseInt(lastcode.optcode % 2);
-        console.log('if parseInt: ',c);
-        const code = lastcode.optcode + c ;
-        console.log(' if new code: ',code);
-        const body = {
-          email: email,
-          optcode: code,
-        };
-        const savecode = await OptCode.create(body);
-        console.log("Code Saved: ", savecode);
-        return code;
-      } else {
-        console.log('else old code: ', lastcode.optcode);
-        const c = parseInt(lastcode.optcode % 2);
-        console.log('else parseInt: ',c);
-        const code = lastcode.optcode + c ;
-        console.log('else new code: ',code);
-        const body = {
-          email: email,
-          optcode: code,
-        };
-        const savecode = await OptCode.create(body);
-        console.log("Code Saved: ", savecode);
-        return code;
+    // const otpcode = (await OtpCode.find()).length;
+    // console.log("otp code length:" ,otpcode);
+    // if (otpcode > 0) {
+    //   const lastcode = await OtpCode.findOne().sort({ _id: -1 }).limit(1);
+    //   console.log("last code: ", lastcode);
+    //   // if (lastcode) {
+    //   if ((lastcode.otpcode % 2) === 0) {
+    //     console.log('if old code: ', lastcode.otpcode);
+    //     const c = parseInt(lastcode.otpcode % 10);
+    //     console.log('if parseInt: ',c);
+    //     const code = lastcode.otpcode + c ;
+    //     console.log(' if new code: ',code);
+    //     const body = {
+    //       email: email,
+    //       otpcode: code,
+    //     };
+    //     const savecode = await OtpCode.create(body);
+    //     console.log("Code Saved: ", savecode);
+    //     return code;
+    //   } else {
+    //     console.log('else old code: ', lastcode.otpcode);
+    //     const c = parseInt(lastcode.otpcode % 10);
+    //     console.log('else parseInt: ',c);
+    //     const code = lastcode.otpcode + c ;
+    //     console.log('else new code: ',code);
+    //     const body = {
+    //       email: email,
+    //       otpcode: code,
+    //     };
+    //     const savecode = await OtpCode.create(body);
+    //     console.log("Code Saved: ", savecode);
+    //     return code;
+    //   }
+    // } else if (otpcode === 0) {
+
+    const str = email;
+    var gencode = 0;
+    console.log('user email in gencode: ',str);
+    for(var i=0; i<4; i++){
+      if(str.charCodeAt(i) < 60) {
+        gencode += (100000 + str.charCodeAt(i) + (str.charCodeAt(i)/2));
       }
-    } else if (optcode === 0) {
-      const gencode = 111111;
+      else if(str.charCodeAt(i)> 60 && str.charCodeAt(i)< 100) {
+        gencode += (100000 + str.charCodeAt(i) + (str.charCodeAt(i)/3));
+      }
+      else if(str.charCodeAt(i)> 100) {
+        gencode += (100000 + str.charCodeAt(i) + (str.charCodeAt(i)/10));
+      }
+      console.log(str.charCodeAt(i));
+    }
+    console.log('new code gencode: ', gencode);
+
+      // const gencode = 111111;
       const body = {
         email: email,
-        optcode: gencode,
+        otpcode: gencode,
       };
-      const savecode = await OptCode.create(body);
+      const savecode = await OtpCode.create(body);
       console.log("Code Saved: ", savecode);
       console.log("Gen Code: ",gencode);
       
@@ -103,6 +121,6 @@ async function generateCode(email) {
       } else {
         return "error in saving code";
       }
-    }
+    // }
   } catch (error) {}
 }

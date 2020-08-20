@@ -17,7 +17,7 @@ DataBase connection code
 ########################## 
 */
 mongoose.Promise = global.Promise;
-const mongoCon = devConfig.onlinedb;
+const mongoCon = devConfig.connectionString;
 const connect = mongoose.connect(mongoCon, {
     useNewUrlParser: true,
     useUnifiedTopology: true

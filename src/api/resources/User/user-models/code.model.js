@@ -7,7 +7,7 @@ const codeSchema = new Schema(
       type: String,
       required: true,
     },
-    optcode: {
+    otpcode: {
       type: Number,
       required: true,
     },
@@ -17,5 +17,5 @@ const codeSchema = new Schema(
   }
 );
 
-const OptCode = mongoose.model('optcode', codeSchema);
-module.exports = OptCode;
+const OtpCode = mongoose.model('otpcode', codeSchema);
+module.exports = OtpCode;
