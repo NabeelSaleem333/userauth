@@ -148,7 +148,7 @@ UserRouter.route("/login").post(async (req, res) => {
     console.log("User is login");
     if (Object.keys(req.body).length === 0) {
       console.log("Object are missing");
-      res.statusCode = 404;
+      res.status = 404;
       res.setHeader("Content-Type", "application/json");
       res.json({
         status: false,
@@ -160,14 +160,14 @@ UserRouter.route("/login").post(async (req, res) => {
         {email,password} are not empty
         */
       if (!req.body.email) {
-        res.statusCode = 404;
+        res.status= 404;
         res.setHeader("Content-Type", "application/json");
         res.json({
           msg: `Please enter email`,
         });
       }
       if (!req.body.password) {
-        res.statusCode = 404;
+        res.status = 404;
         res.setHeader("Content-Type", "application/json");
         res.json({
           msg: `Please enter password`,
@@ -180,11 +180,11 @@ UserRouter.route("/login").post(async (req, res) => {
       },{password: 0});
       console.log(findUser);
       if (findUser) {
-        res.statusCode = 200;
+        res.status = 200;
         res.setHeader("Content-Type", "application/json");
         res.json({status: true, findUser});
-      } else {
-        res.statusCode = 404;
+      } else if(!findUser) {
+        res.status = 404;
         res.setHeader("Content-Type", "application/json");
         res.json({ status: false, msg:'Invalid Email or Password' });
       }
