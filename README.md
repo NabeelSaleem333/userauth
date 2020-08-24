@@ -23,12 +23,12 @@
 <a href="">http://localhost:4000/api/users/newpassword</a>
 <p>3.4.1- Sending OTP CODE to an existing User-Email</p>
 <p>3.5- Update password for admin without verification</p>
-<a href="">http://localhost:4000/api/users/verifyadmin/:admin</a>
+<a href="">http://localhost:4000/api/users/verifyadmin/admin</a>
 <br/>
-<a href="">http://localhost:4000/api/users/updateadmin/:admin</a>
+<a href="">http://localhost:4000/api/users/updateadmin/admin</a>
 <br/>
 <h3>4- Delete Operations:</h3>
 <p>4.1- Deleting single user (by using system user {Token, email})</p>
-<a href="">http://localhost:4000/api/users/:email</a>
+<a href="">http://localhost:4000/api/users/email</a>
 <p>4.2- Deleting all  users (by system admin {Token})</p>
 
