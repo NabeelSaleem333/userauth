@@ -4,8 +4,9 @@
 <p>1.1- Creating a new user (username, email, password)</p>
 <a>// http://localhost:4000/api/users/signup</a>
 <p>1.2- Verifying Email Address using OTP CODE sending to User-Email</p>
-<a>http://localhost:4000/api/users/verifyemail</a>
-<a>http://localhost:4000/api/users/verifyotpcode</a>
+<a href="">http://localhost:4000/api/users/verifyemail</a>
+<br/>
+<a href="">http://localhost:4000/api/users/verifyotpcode</a>
 <br/>
 <br/>
 <h3>2- Get Operation (Login):</h3>
