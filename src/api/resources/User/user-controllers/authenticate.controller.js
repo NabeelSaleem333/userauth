@@ -23,13 +23,17 @@ exports.authenticate = async (req, res) => {
           {email,password} are not empty
           */
       if (!req.body.email) {
-        return res.status(httpstatus.NOT_ACCEPTABLE).json({
+        res.status = 400;
+        res.setHeader("Content-Type", "application/json");
+        return res.json({
           success: false,
           status: `Please enter email`,
         });
       }
       if (!req.body.password) {
-        return res.status(httpstatus.NOT_ACCEPTABLE).json({
+        res.status = 400;
+        res.setHeader("Content-Type", "application/json");
+        return res.json({
           success: false,
           status: `Please enter password`,
         });
@@ -47,24 +51,26 @@ exports.authenticate = async (req, res) => {
         console.log(req.body.password, findUser.password);
         if (verifypassword) {
           const token = auth.getToken({ _id: findUser._id });
-          return res
-            .status(httpstatus.ACCEPTED)
-            .json({
-              success: true,
-              token: token,
-              status: "Logged in success!",
-            });
+          return res.status(httpstatus.ACCEPTED).json({
+            success: true,
+            token: token,
+            status: "Logged in success!",
+          });
         } else {
-          return res.status(httpstatus.NOT_ACCEPTABLE).json({
+          res.status = 400;
+          res.setHeader("Content-Type", "application/json");
+          return res.json({
             success: false,
             status: `Invalid Email or Password!`,
           });
-            
         }
       } else {
-        return res
-          .status(httpstatus.NOT_ACCEPTABLE)
-          .json({ success: false, status: "Invalid Email or Password" });
+        res.status = 400;
+        res.setHeader("Content-Type", "application/json");
+        return res.json({
+          success: false,
+          status: "Invalid Email or Password",
+        });
       }
     }
   } catch (error) {
