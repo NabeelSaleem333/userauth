@@ -1,5 +1,5 @@
 const httpstatus = require("http-status-codes");
-const passwordhash = require('password-hash');
+const passwordhash = require("password-hash");
 //
 const User = require("../user-models/user.model");
 const func = require("../functions/sendemail");
@@ -34,24 +34,37 @@ exports.authenticate = async (req, res) => {
           status: `Please enter password`,
         });
       }
-      console.log(req.body);
-      const findUser = await User.findOne(
-        {
-          email: req.body.email,
+      // console.log(req.body);
+      const findUser = await User.findOne({
+        email: req.body.email,
+      });
+      console.log("User: ", findUser);
+      if (findUser) {
+        var verifypassword = passwordhash.verify(
+          req.body.password,
+          findUser.password
+        );
+        console.log(req.body.password, findUser.password);
+        if (verifypassword) {
+          const token = auth.getToken({ _id: findUser._id });
+          return res
+            .status(httpstatus.ACCEPTED)
+            .json({
+              success: true,
+              token: token,
+              status: "Logged in success!",
+            });
+        } else {
+          return res.status(httpstatus.BAD_REQUEST).json({
+            success: false,
+            status: `Invalid Email or Password!`,
+          });
+            
         }
-      );
-      console.log(req.body.password,findUser.password);
-      var verifypassword = passwordhash.verify(req.body.password, findUser.password);
-     
-
-      console.log(verifypassword,findUser);
-      if (findUser && verifypassword) {
-        const token = auth.getToken({ _id: findUser._id });
+      } else {
         return res
-          .status(httpstatus.ACCEPTED)
-          .json({ success: true, token: token, status: "Logged in success!" });
-      } else if (!findUser || !verifypassword) {
-      return res.status(httpstatus.BAD_REQUEST).json({ success: false, status: "Invalid Email or Password" });
+          .status(httpstatus.BAD_REQUEST)
+          .json({ success: false, status: "Invalid Email or Password" });
       }
     }
   } catch (error) {
