@@ -13,7 +13,7 @@ exports.authenticate = async (req, res) => {
     console.log("User is login");
     if (Object.keys(req.body).length === 0) {
       console.log("Object are missing");
-      return res.status(httpstatus.BAD_REQUEST).json({
+      return res.status(httpstatus.NOT_ACCEPTABLE).json({
         success: false,
         status: `Your request body is empty ${req.body}`,
       });
@@ -23,13 +23,13 @@ exports.authenticate = async (req, res) => {
           {email,password} are not empty
           */
       if (!req.body.email) {
-        return res.status(httpstatus.BAD_REQUEST).json({
+        return res.status(httpstatus.NOT_ACCEPTABLE).json({
           success: false,
           status: `Please enter email`,
         });
       }
       if (!req.body.password) {
-        return res.status(httpstatus.BAD_REQUEST).json({
+        return res.status(httpstatus.NOT_ACCEPTABLE).json({
           success: false,
           status: `Please enter password`,
         });
@@ -55,7 +55,7 @@ exports.authenticate = async (req, res) => {
               status: "Logged in success!",
             });
         } else {
-          return res.status(httpstatus.BAD_REQUEST).json({
+          return res.status(httpstatus.NOT_ACCEPTABLE).json({
             success: false,
             status: `Invalid Email or Password!`,
           });
@@ -63,7 +63,7 @@ exports.authenticate = async (req, res) => {
         }
       } else {
         return res
-          .status(httpstatus.BAD_REQUEST)
+          .status(httpstatus.NOT_ACCEPTABLE)
           .json({ success: false, status: "Invalid Email or Password" });
       }
     }
