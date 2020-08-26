@@ -40,7 +40,9 @@ exports.authenticate = async (req, res) => {
           email: req.body.email,
         }
       );
+      console.log(req.body.password,findUser.password);
       var verifypassword = passwordhash.verify(req.body.password, findUser.password);
+     
 
       console.log(verifypassword,findUser);
       if (findUser && verifypassword) {
