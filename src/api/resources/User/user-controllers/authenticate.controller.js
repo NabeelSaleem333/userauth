@@ -34,7 +34,7 @@ exports.authenticate = async (req, res) => {
           status: `Please enter password`,
         });
       }
-
+      console.log(req.body);
       const findUser = await User.findOne(
         {
           email: req.body.email,

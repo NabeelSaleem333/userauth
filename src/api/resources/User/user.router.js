@@ -21,10 +21,10 @@ userRouter.get('/getuser', getController.getUser);
 // http://localhost:4000/api/users/login
 userRouter.post('/login', authController.authenticate);
 
-// http://localhost:4000/api/users/:email
+// http://localhost:4000/api/users/email
 // userRouter.use('/update', updateController);
 
-// http://localhost:4000/api/users/:email
+// http://localhost:4000/api/users/email
 userRouter.delete('/delete/:role/:id', deleteController.deleteSignleUser);
 
 // http://localhost:4000/api/users/changepassword
